@@ -61,7 +61,9 @@ app.get('/movies/add', (req, res) => {
 
 //url get/read Movies 
 app.get('/movies/get', (req, res) => {
-    res.send({ movies } )
+    var stt = 200
+    // res.send({ movies } )
+    res.send({"Statue" :stt, movies })
 });
 //url edit/update Movies
 app.get('/movies/edit', (req, res) => {
