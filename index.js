@@ -48,7 +48,7 @@ app.get('/search/:date', (req, res) => {
         res.send(`{ status : ${status} , Error : ${error} , message: you have to provide a search }`)
     }
 });
-//url Movies 
+//url Movies
 app.get('/movies', (req, res) => {
     // var status=200;
     res.send(`{status : 200 , message : Movies}`)
@@ -59,11 +59,9 @@ app.get('/movies/add', (req, res) => {
     res.send(`{status : 200 , message : Add Movies}`)
 });
 
-//url get/read Movies 
+//url get/read Movies
 app.get('/movies/get', (req, res) => {
-    var stt = 200
-    // res.send({ movies } )
-    res.send({"Statue" :stt, movies })
+    res.send({ "Statue": 200, movies })
 });
 //url edit/update Movies
 app.get('/movies/edit', (req, res) => {
@@ -74,6 +72,24 @@ app.get('/movies/edit', (req, res) => {
 app.get('/movies/delete', (req, res) => {
     // var status=200;
     res.send(`{status : 200 , message : delete Movies}`)
+});
+//url get by rating
+app.get('/movies/get/by-rate', (req, res) => {
+    var sortRate = movies.sort((a, b) => {
+        return b.rating -a.rating
+    })
+    res.send({ "status ": 200, "data:": sortRate })
+});
+//url get by date
+app.get('/movies/get/by-date', (req, res) => {
+    const sortYear = movies.sort((a, b) => (a.year > b.year ? 1 : -1))
+    res.send({ "status": 200, "data: ": sortYear })
+});
+//url get by title
+app.get('/movies/get/by-title', (req, res) => {
+    const sortTitle = movies.sort((a, b) => (a.title > b.title ? 1 : -1))
+    res.send({ "status": 200, "data: ": sortTitle })
+
 });
 app.listen(port, () => {
     console.log(`Khalid's server is listening to  http://localhost:${port}`)
