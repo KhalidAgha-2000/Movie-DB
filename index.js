@@ -1,6 +1,14 @@
 var express = require('express')
 var app = express()
 var port = 2500
+
+var movies = [
+    { title: 'Jaws', year: 1975, rating: 8 },
+    { title: 'Avatar', year: 2009, rating: 7.8 },
+    { title: 'Brazil', year: 1985, rating: 8 },
+    { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
+]
+
 //home url or no entry url
 app.get('/', (req, res) => {
     res.send('OK');
@@ -40,7 +48,31 @@ app.get('/search/:date', (req, res) => {
         res.send(`{ status : ${status} , Error : ${error} , message: you have to provide a search }`)
     }
 });
+//url Movies 
+app.get('/movies', (req, res) => {
+    // var status=200;
+    res.send(`{status : 200 , message : Movies}`)
+})
+//url add/create Movies
+app.get('/movies/add', (req, res) => {
+    // var status=200;
+    res.send(`{status : 200 , message : Add Movies}`)
+});
 
+//url get/read Movies 
+app.get('/movies/get', (req, res) => {
+    res.send({ movies } )
+});
+//url edit/update Movies
+app.get('/movies/edit', (req, res) => {
+    // var status=200;
+    res.send(`{status : 200 , message : edit Movies}`)
+});
+//url delete Movies
+app.get('/movies/delete', (req, res) => {
+    // var status=200;
+    res.send(`{status : 200 , message : delete Movies}`)
+});
 app.listen(port, () => {
     console.log(`Khalid's server is listening to  http://localhost:${port}`)
-})
+});
