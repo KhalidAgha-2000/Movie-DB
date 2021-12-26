@@ -1,12 +1,13 @@
 var express = require('express')
+const { json, send } = require('express/lib/response')
 var app = express()
 var port = 2500
 
 var movies = [
-    { title: 'Jaws', year: 1975, rating: 8 },
-    { title: 'Avatar', year: 2009, rating: 7.8 },
-    { title: 'Brazil', year: 1985, rating: 8 },
-    { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
+    { id: 1, title: 'Jaws', year: 1975, rating: 8 },
+    { id: 2, title: 'Avatar', year: 2009, rating: 7.8 },
+    { id: 3, title: 'Brazil', year: 1985, rating: 8 },
+    { id: 4, title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
 ]
 
 //home url or no entry url
@@ -76,7 +77,7 @@ app.get('/movies/delete', (req, res) => {
 //url get by rating
 app.get('/movies/get/by-rate', (req, res) => {
     var sortRate = movies.sort((a, b) => {
-        return b.rating -a.rating
+        return b.rating - a.rating
     })
     res.send({ "status ": 200, "data:": sortRate })
 });
@@ -91,6 +92,14 @@ app.get('/movies/get/by-title', (req, res) => {
     res.send({ "status": 200, "data: ": sortTitle })
 
 });
+
+//movie by id
+app.get('/movies/get/id/:id', (req, res) => {
+    const moviee = movies.find(m => m.id === parseInt(req.params.id));
+    if (!moviee) res.status(404).send(`{status:404, error:true, message:'the movie ${req.params.id} does not exist'}`)
+    res.status(200).send(`{status:200, data: title : ${moviee.title} ,Year : ${moviee.year} , Rate :  ${moviee.rating} }`)
+});
+
 app.listen(port, () => {
     console.log(`Khalid's server is listening to  http://localhost:${port}`)
 });

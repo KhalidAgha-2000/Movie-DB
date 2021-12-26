@@ -88,8 +88,8 @@ However, and this is important to understand, we will *not* create a front end i
 
 ## Step 7 - READ ONE
 
-- With Express, make it so that when the url `/movies/read/id/<ID>` is requested, you answer with `{status:200, data:<MOVIE>}`, where `<MOVIE>` is the movie defined by the provided `<ID>`. If the id doesn't exist, then the answer should be: `{status:404, error:true, message:'the movie <ID> does not exist'}`. Don't forget to set an actual `404` status code. 
-- commit ("step 7") 
+    - With Express, make it so that when the url `/movies/read/id/<ID>` is requested, you answer with `{status:200, data:<MOVIE>}`, where `<MOVIE>` is the movie defined by the provided `<ID>`. If the id doesn't exist, then the answer should be: `{status:404, error:true, message:'the movie <ID> does not exist'}`. Don't forget to set an actual `404` status code. 
+    - commit ("step 7") 
 
 ## Step 8 - CREATE
 
