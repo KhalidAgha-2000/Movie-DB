@@ -78,6 +78,17 @@ routerM.get('/by-title', (req, res) => {
 
 });
 //Step 6
+//Step 7
+routerM.get('/byID/:id', (req, res) => {
+  const moviee = movies.find(m => m.id === parseInt(req.params.id));
+  if (!moviee) {
+  res.send(`Status: ${res.status=404}, error: true, message: the movie with id ${req.params.id} does not exist `)}
+  else{
+    res.send({"status ":res.status=200, "data ": "title: "+ moviee.title+ ", rating: " +moviee.rating +",year:" + moviee.year ,}  )
+    
+  }
+});
+//Step 7
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
