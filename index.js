@@ -45,6 +45,18 @@ routerM.get("/search", (req, res) => {
 routerM.get("/getMovies", (req, res) => {
   res.send({ movies });
 });
+//Edit
+routerM.get("/getMovies", (req, res) => {
+  res.send({ movies });
+});
+//Delete
+routerM.get("/getMovies", (req, res) => {
+  res.send({ movies });
+});
+//Update
+routerM.get("/getMovies", (req, res) => {
+  res.send({ movies });
+});
 //Step 5
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
