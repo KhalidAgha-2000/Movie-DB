@@ -123,6 +123,21 @@ routerM.get("/add", (req, res) => {
   }
 });
 //Step 8
+//Step 9
+routerM.get("/delete/:id", (req, res) => {
+  var Dmovie = movies.find((m) => m.id === parseInt(req.params.id));
+  if (!Dmovie) {
+    res.send(
+      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${
+        req.params.id
+      } does not exist'}`
+    );
+  } else {
+    movies = movies.filter((m) => m.id !== parseInt(req.params.id));
+    res.send(movies);
+  }
+});
+//Step 9
 
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
