@@ -41,6 +41,11 @@ routerM.get("/search", (req, res) => {
   }
 });
 //Step 4
+//Step 5
+routerM.get("/getMovies", (req, res) => {
+  res.send({ movies });
+});
+//Step 5
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
