@@ -60,35 +60,68 @@ routerM.get("/getMovies", (req, res) => {
 //Step 5
 //Step 6
 //url get by rating
-routerM.get('/by-rate', (req, res) => {
+routerM.get("/by-rate", (req, res) => {
   var sortRate = movies.sort((a, b) => {
-      return b.rating - a.rating
-  })
-  res.send({ "status ": 200, "data:": sortRate })
+    return b.rating - a.rating;
+  });
+  res.send({ "status ": 200, "data:": sortRate });
 });
 //url get by date
-routerM.get('/by-date', (req, res) => {
-  const sortYear = movies.sort((a, b) => (a.year > b.year ? 1 : -1))
-  res.send({ "status": 200, "data: ": sortYear })
+routerM.get("/by-date", (req, res) => {
+  const sortYear = movies.sort((a, b) => (a.year > b.year ? 1 : -1));
+  res.send({ status: 200, "data: ": sortYear });
 });
 //url get by title
-routerM.get('/by-title', (req, res) => {
-  const sortTitle = movies.sort((a, b) => (a.title > b.title ? 1 : -1))
-  res.send({ "status": 200, "data: ": sortTitle })
-
+routerM.get("/by-title", (req, res) => {
+  const sortTitle = movies.sort((a, b) => (a.title > b.title ? 1 : -1));
+  res.send({ status: 200, "data: ": sortTitle });
 });
 //Step 6
 //Step 7
-routerM.get('/byID/:id', (req, res) => {
-  const moviee = movies.find(m => m.id === parseInt(req.params.id));
+routerM.get("/byID/:id", (req, res) => {
+  const moviee = movies.find((m) => m.id === parseInt(req.params.id));
   if (!moviee) {
-  res.send(`Status: ${res.status=404}, error: true, message: the movie with id ${req.params.id} does not exist `)}
-  else{
-    res.send({"status ":res.status=200, "data ": "title: "+ moviee.title+ ", rating: " +moviee.rating +",year:" + moviee.year ,}  )
-    
+    res.send(
+      `Status: ${(res.status = 404)}, error: true, message: the movie with id ${
+        req.params.id
+      } does not exist `
+    );
+  } else {
+    res.send({
+      "status ": (res.status = 200),
+      "data ":
+        "title: " +
+        moviee.title +
+        ", rating: " +
+        moviee.rating +
+        ",year:" +
+        moviee.year,
+    });
   }
 });
 //Step 7
+//Step 8
+//url Add/create  Movies
+routerM.get("/add", (req, res) => {
+  var title = req.query.title;
+  var year = req.query.year;
+  var rating = req.query.rating || 4;
+  if (!title || !year || year.length < 4 || isNaN(year)) {
+    res.send(
+      `{status: ${(res.status = 403)}, error:true, message:'you cannot create a movie without providing a title and a year'}`
+    );
+  } else {
+    newMovie = {
+      title,
+      year,
+      rating,
+    };
+    movies.push(newMovie);
+    res.send({ movies });
+  }
+});
+
+//Step 8
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
