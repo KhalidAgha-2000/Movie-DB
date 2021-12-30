@@ -106,12 +106,14 @@ routerM.get("/add", (req, res) => {
   var title = req.query.title;
   var year = req.query.year;
   var rating = req.query.rating || 4;
+  var id = movies.length + 1;
   if (!title || !year || year.length < 4 || isNaN(year)) {
     res.send(
       `{status: ${(res.status = 403)}, error:true, message:'you cannot create a movie without providing a title and a year'}`
     );
   } else {
     newMovie = {
+      id,
       title,
       year,
       rating,
@@ -120,8 +122,8 @@ routerM.get("/add", (req, res) => {
     res.send({ movies });
   }
 });
-
 //Step 8
+
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
