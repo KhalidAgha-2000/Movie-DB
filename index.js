@@ -58,6 +58,26 @@ routerM.get("/getMovies", (req, res) => {
   res.send({ movies });
 });
 //Step 5
+//Step 6
+//url get by rating
+routerM.get('/by-rate', (req, res) => {
+  var sortRate = movies.sort((a, b) => {
+      return b.rating - a.rating
+  })
+  res.send({ "status ": 200, "data:": sortRate })
+});
+//url get by date
+routerM.get('/by-date', (req, res) => {
+  const sortYear = movies.sort((a, b) => (a.year > b.year ? 1 : -1))
+  res.send({ "status": 200, "data: ": sortYear })
+});
+//url get by title
+routerM.get('/by-title', (req, res) => {
+  const sortTitle = movies.sort((a, b) => (a.title > b.title ? 1 : -1))
+  res.send({ "status": 200, "data: ": sortTitle })
+
+});
+//Step 6
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
