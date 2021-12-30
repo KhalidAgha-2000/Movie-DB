@@ -138,6 +138,26 @@ routerM.get("/delete/:id", (req, res) => {
   }
 });
 //Step 9
+//Step 10
+routerM.get("/update/:id", (req, res) => {
+  var { title, year, rating } = req.query;
+  var m = movies.find((m) => m.id == req.params.id);
+  if (!m || m > movies.length || m < 1) {
+    res.send("Enter movie ID!!");
+  } else {
+    if (title) {
+      m.title = title;
+    }
+    if (year) {
+      m.year = year;
+    }
+    if (rating) {
+      m.rating = rating;
+    }
+    res.send({ movies });
+  }
+});
+//Step 10
 
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
