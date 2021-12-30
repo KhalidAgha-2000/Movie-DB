@@ -24,7 +24,23 @@ routerM.get("/time", (req, res) => {
   res.send(`{status : ${(res.status = 200)} , message : ${time}}`);
 });
 //Step 3
-
+//Step 4
+routerM.get("/hello/:id", (req, res) => {
+  res.send(
+    `{status: ${(res.status = 200)}, message : Hello, ${req.params.id} }`
+  );
+});
+routerM.get("/search", (req, res) => {
+  var s = req.query.s;
+  if (!s) {
+    res.send(
+      `{status: ${(res.status = 500)}, error : true, message: you have to provide a search}`
+    );
+  } else {
+    res.send(`{status: ${(res.status = 200)}, message : ok ,data : ${s}}`);
+  }
+});
+//Step 4
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
 });
