@@ -158,6 +158,64 @@ routerM.get("/update/:id", (req, res) => {
   }
 });
 //Step 10
+//Step 11
+//---------------------Verbs--------------------
+routerM.get('/vMomies', (req, res) => {
+  res.send({movies})
+});
+routerM.post('/vPost',(req,res)=>{
+  var title = req.query.title;
+  var year = req.query.year;
+  var rating = req.query.rating || 4;
+  var id = movies.length + 1;
+  if (!title || !year || year.length < 4 || isNaN(year)) {
+    res.send(
+      `{status: ${(res.status = 403)}, error:true, message:'you cannot create a movie without providing a title and a year'}`
+    );
+  } else {
+    newMovie = {
+      id,
+      title,
+      year,
+      rating,
+    };
+    movies.push(newMovie);
+    res.send({ movies });
+  }
+})
+routerM.patch('/vUpdate/:id',(req,res)=>{
+  var { title, year, rating } = req.query;
+  var m = movies.find((m) => m.id == req.params.id);
+  if (!m || m > movies.length || m < 1) {
+    res.send("Enter movie ID!!");
+  } else {
+    if (title) {
+      m.title = title;
+    }
+    if (year) {
+      m.year = year;
+    }
+    if (rating) {
+      m.rating = rating;
+    }
+    res.send({ movies });
+  }
+})
+routerM.delete('/vDelete/:id',(req,res)=>{
+  
+  var Dmovie = movies.find((m) => m.id === parseInt(req.params.id));
+  if (!Dmovie) {
+    res.send(
+      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${
+        req.params.id
+      } does not exist'}`
+    );
+  } else {
+    movies = movies.filter((m) => m.id !== parseInt(req.params.id));
+    res.send(movies);
+  }
+})
+//Step 11
 
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
