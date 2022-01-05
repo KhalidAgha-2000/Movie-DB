@@ -6,7 +6,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 mongoose.connect(
-  "mongodb+srv://test:test@cluster0.5nidy.mongodb.net/testDB?retryWrites=true&w=majority"
+ //url to of database
 );
 var schemaM = new Schema({
   _id: Number,
