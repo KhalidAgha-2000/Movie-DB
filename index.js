@@ -1,10 +1,23 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-// var moviesRout = require('./MOVIES/movies.js')
 var app = express();
-
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+//Mongo DB
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
+mongoose.connect(
+  "mongodb+srv://test:test@cluster0.5nidy.mongodb.net/testDB?retryWrites=true&w=majority"
+);
+var schemaM = new Schema({
+  _id: Number,
+  title: String,
+  rating: Number,
+  year: Number,
+}, { collection: 'MoviesModel' }
+);
+var MoviesModel = mongoose.model("MoviesModel", schemaM);
+// Mongo DB
 var routerM = express.Router();
-
 var movies = [
   { id: 1, title: "Jaws", year: 1975, rating: 8 },
   { id: 2, title: "Avatar", year: 2009, rating: 7.8 },
@@ -82,8 +95,7 @@ routerM.get("/byID/:id", (req, res) => {
   const moviee = movies.find((m) => m.id === parseInt(req.params.id));
   if (!moviee) {
     res.send(
-      `Status: ${(res.status = 404)}, error: true, message: the movie with id ${
-        req.params.id
+      `Status: ${(res.status = 404)}, error: true, message: the movie with id ${req.params.id
       } does not exist `
     );
   } else {
@@ -128,8 +140,7 @@ routerM.get("/delete/:id", (req, res) => {
   var Dmovie = movies.find((m) => m.id === parseInt(req.params.id));
   if (!Dmovie) {
     res.send(
-      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${
-        req.params.id
+      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${req.params.id
       } does not exist'}`
     );
   } else {
@@ -160,10 +171,10 @@ routerM.get("/update/:id", (req, res) => {
 //Step 10
 //Step 11
 //---------------------Verbs--------------------
-routerM.get('/vMomies', (req, res) => {
-  res.send({movies})
+routerM.get("/vMomies", (req, res) => {
+  res.send({ movies });
 });
-routerM.post('/vPost',(req,res)=>{
+routerM.post("/vPost", (req, res) => {
   var title = req.query.title;
   var year = req.query.year;
   var rating = req.query.rating || 4;
@@ -182,8 +193,8 @@ routerM.post('/vPost',(req,res)=>{
     movies.push(newMovie);
     res.send({ movies });
   }
-})
-routerM.patch('/vUpdate/:id',(req,res)=>{
+});
+routerM.patch("/vUpdate/:id", (req, res) => {
   var { title, year, rating } = req.query;
   var m = movies.find((m) => m.id == req.params.id);
   if (!m || m > movies.length || m < 1) {
@@ -200,22 +211,44 @@ routerM.patch('/vUpdate/:id',(req,res)=>{
     }
     res.send({ movies });
   }
-})
-routerM.delete('/vDelete/:id',(req,res)=>{
-  
+});
+routerM.delete("/vDelete/:id", (req, res) => {
   var Dmovie = movies.find((m) => m.id === parseInt(req.params.id));
   if (!Dmovie) {
     res.send(
-      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${
-        req.params.id
+      `{status: ${(res.status = 404)}, error:true, message:'the movie with id  ${req.params.id
       } does not exist'}`
     );
   } else {
     movies = movies.filter((m) => m.id !== parseInt(req.params.id));
     res.send(movies);
   }
-})
+});
 //Step 11
+//Step 12
+routerM.get('/checkMoviesDB', (req, res) => {
+  MoviesModel.find()
+    .then(function (doc) {
+      res.send({ items: doc });
+      console.log(doc)
+    });
+})
+routerM.get('/AddMovieToDB', (req, res) => {
+  var item = {
+    _id:Math.random(),
+    title: req.query.title,
+    rating: req.query.rating,
+    year: req.query.year
+  };
+
+  var data = new MoviesModel(item);
+  data.save();
+
+  console.log(item)
+  console.log(data)
+})
+
+//Step 12
 
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
