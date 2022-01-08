@@ -1,29 +1,56 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
+var mongodb = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 //Mongo DB
 var mongoose = require("mongoose");
+
+const Db = require("mongodb/lib/db");
+const { query } = require("express");
 var Schema = mongoose.Schema;
-mongoose.connect(
- //url to of database
-);
+const dbUrl = //DB url
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => console.log("Connect Successfuly!"))
+  .catch((err) => console.log(err));
+
+
+
 var schemaM = new Schema({
-  _id: Number,
-  title: String,
+   title: String,
   rating: Number,
   year: Number,
 }, { collection: 'MoviesModel' }
 );
+var usersM = new Schema({
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+}
+);
 var MoviesModel = mongoose.model("MoviesModel", schemaM);
+var UsersModel = mongoose.model("UsersModel", usersM);
 // Mongo DB
 var routerM = express.Router();
-var movies = [
+ var movies = [
   { id: 1, title: "Jaws", year: 1975, rating: 8 },
   { id: 2, title: "Avatar", year: 2009, rating: 7.8 },
   { id: 3, title: "Brazil", year: 1985, rating: 8 },
   { id: 4, title: "الإرهاب والكباب‎", year: 1992, rating: 6.2 },
 ];
+var users = [
+  { id: 1, username: "Khalid", password: 2333 },
+  { id: 2, username: "Ahmad", password: 2222 },
+  { id: 3, username: "Mona", password: 1111 },
+  { id: 4, username: "Lora", password: 5555 },
+];
+
 var port = 2500;
 app.use(bodyParser.json());
 app.use("/Movies", routerM);
@@ -235,20 +262,112 @@ routerM.get('/checkMoviesDB', (req, res) => {
 })
 routerM.get('/AddMovieToDB', (req, res) => {
   var item = {
-    _id:Math.random(),
-    title: req.query.title,
+     title: req.query.title,
     rating: req.query.rating,
     year: req.query.year
   };
-
   var data = new MoviesModel(item);
   data.save();
+  res.send(`new movie has benn added to your DB! -- ${data}`)
+ 
+})
+//Step 12
+//Step 13
+//-----------------User CRUD---------------
+routerM.get("/Users", (req, res) => {
+  res.send({ users });
+  console.log({ users }, "Hard coded from array ")
+});
+//Check the collection in DB
+routerM.get('/checkUsersDB', (req, res) => {
+  UsersModel.find()
+    .then(function (doc) {
+      res.send({ items: doc });
+      console.log(doc, "DB users ")
+    });
+})
+//Add user to DB
+routerM.post('/AddUserToDB', (req, res) => {
+  var user = {
+    username: req.query.username,
+    password: req.query.password
+  };
 
-  console.log(item)
+  if (!user.username || !user.password) {
+    res.send(`{Status: ${res.status = 404}, message : Cannot add user withour providing username or password }`)
+  }
+  else {
+    var data = new UsersModel(user);
+    data.save();
+    res.send("User Added Successfuly!")
+  }
+  console.log(user)
   console.log(data)
 })
+//Delete user from DB
+routerM.delete("/DeleteUserDB/:id", (req, res) => {
+  var id = req.params.id;
+  UsersModel.deleteOne({ _id: ObjectID(id) }, function (err, results) {
+    if (err) { res.send(`${err}`) }
+    else { res.send("DELETED") }
+  });
+});
+//Update User on DB
+routerM.patch('/UpdateUserOnDB/:id', (req, res) => {
+  var id = req.params.id
+  var username = req.query.username
+  var password = req.query.password
+  UsersModel.updateOne({ _id: ObjectID(id) }, { $set: { "username": username, "password": password } }, function (err, result) {
+    if (err) { res.send(err) }
+    else {
+      res.send(`${req.params.id} Updated Successfuly `)
+    }
+  });
 
-//Step 12
+})
+//Authenticate User  to modify / delete Movies
+//ADD Movie
+routerM.get('/AuthAdd/:username', (req, res) => {
+  var item = {
+    title: req.query.title,
+    rating: req.query.rating,
+    year: req.query.year
+  }
+  var username = req.params.username
+  UsersModel.findOne({ username: username }).then(() => {
+    var data = new MoviesModel(item);
+    data.save();
+    res.send(`new movie has benn added to your DB! -- ${data}`)
+  })
+})
+//DELETE Movie
+routerM.delete('/AuthDelete/:username/:mId', (req, res) => {
+  var username = req.params.username
+  var id = req.params.id;
+  UsersModel.findOne({ username: username }).then(() => {
+    MoviesModel.deleteOne({ _id: ObjectID(id) }, function (err, results) {
+      if (err) { res.send(`${err}`) }
+      else { res.send("DELETED") }
+    });
+  })
+})
+//UPDATE Movie
+routerM.patch('/AuthUpdate/:username/:mId', (req, res) => {
+  var id = req.params.id
+  var username = req.params.username
+  var title = req.query.title
+  var rating = req.query.rating
+  var year = req.query.year
+  UsersModel.findOne({ username: username }).then(() => {
+    MoviesModel.updateOne({ _id: ObjectID(id) }, { $set: { "title": title, "rating": rating, "year": year } }, function (err, result) {
+      if (err) { res.send(err) }
+      else {
+        res.send(`${req.params.id} Updated Successfuly `)
+      }
+    });
+  })
+})
+//Step 13
 
 app.get("/", (req, res) => {
   res.send("Hello First !!!!!!");
